@@ -36,7 +36,7 @@ def start():
 
 
 def stop(force=False):
-    ''' Stop the bot. Use :force to kill -9. Default is -15 ''' 
+    ''' Stop the bot. Use :force to kill -9. Default is -15 '''
     with cd(EIZZEK_DIR):
         if 'twistd.pid' not in run('ls'):
             print ' - Not running'
@@ -48,5 +48,5 @@ def stop(force=False):
 
 def send_config():
     ''' Send the local config.py to the server '''
-    put('eizzek/config.py', os.path.join(EIZZEK_DIR, 'config.py'))
+    put('eizzek/config.py', os.path.join(EIZZEK_DIR, 'eizzek', 'config.py'))
 
