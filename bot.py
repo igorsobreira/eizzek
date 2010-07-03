@@ -18,7 +18,7 @@ class EizzekProtocol(MessageProtocol):
             reply["to"] = msg["from"]
             reply["from"] = self.parent.jid.full()
             reply["type"] = 'chat'
-            reply.addElement("body", content="hey there")
+            reply.addElement("body", content=msg.body)
             
             self.send(reply)
     
