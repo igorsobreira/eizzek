@@ -5,7 +5,7 @@ Eizzek is a simple g-talk bot built on top of [Twisted](http://twistedmatrix.com
 
 To start just execute the command:
 
-    twistd -ny twistd.tac
+    make start
 
 To run all tests use:
 
