@@ -1,9 +1,16 @@
 Eizzek Bot
 ==========
 
-Eizzek is a simple g-talk bot.
+Eizzek is a simple g-talk bot built on top of [Twisted](http://twistedmatrix.com/) and [Wokkel](http://wokkel.ik.nu/).
 
-It's currently built using [SleekXMPP](http://github.com/fritzy/SleekXMPP).
+
+Dependencies
+------------
+
+ - Twisted
+ - Wokkel
+ - PyOpenSSL
+
 
 config.py
 ---------
@@ -14,3 +21,4 @@ You need to create a config.py file with some variables:
     PASSWORD = 'secret'
     SERVER = 'talk.google.com'
     PORT = 5222
+
