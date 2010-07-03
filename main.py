@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sleekxmpp
+import config
 
 class Eizzek(object):
     
@@ -23,8 +25,7 @@ class Eizzek(object):
 
 
 def main():
-    import config
-    bot = EchoBot(config.ACCOUNT, config.PASSWORD)
+    bot = Eizzek(config.JID, config.PASSWORD)
     bot.run((config.SERVER, config.PORT))
 
 
