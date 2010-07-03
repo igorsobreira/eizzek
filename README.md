@@ -7,12 +7,17 @@ To start just execute the command:
 
     twistd -ny twistd.tac
 
+To run all tests use:
+
+    make test
+
 Dependencies
 ------------
 
  - Twisted
  - Wokkel
  - PyOpenSSL
+ - Nose
 
 
 config.py
