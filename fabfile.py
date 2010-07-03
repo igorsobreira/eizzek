@@ -1,7 +1,6 @@
 import os.path
 from fabric.api import *
-
-import config
+from eizzek import config
 
 env.hosts = [config.SSH_HOST]  # format: username@host:port
 
@@ -33,7 +32,7 @@ def update(all=False):
 def start():
     ''' Start bot service '''
     with cd(EIZZEK_DIR):
-        out = run('%s -y twistd.tac' % twistd)
+        run('%s -y eizzek/twistd.tac' % twistd)
 
 
 def stop(force=False):
@@ -49,5 +48,5 @@ def stop(force=False):
 
 def send_config():
     ''' Send the local config.py to the server '''
-    put('config.py', os.path.join(EIZZEK_DIR, 'config.py'))
+    put('eizzek/config.py', os.path.join(EIZZEK_DIR, 'config.py'))
 

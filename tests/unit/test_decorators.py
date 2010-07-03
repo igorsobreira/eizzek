@@ -1,4 +1,5 @@
 from unittest import TestCase
+import re
 
 from eizzek.lib.decorators import plugin
 from eizzek.lib.registry import registry
@@ -32,3 +33,13 @@ class PluginTest(TestCase):
         assert len(registry.plugins) == 1
         assert registry.plugins.has_key('ping_plugin')
     
+    
+    def test_compile_regex_on_register(self):
+        
+        @plugin(r'^ping (.+)$')
+        def ping():
+            return ''
+        
+        assert type(registry.plugins['ping'][0]) == type(re.compile(r'.*'))
+    
+

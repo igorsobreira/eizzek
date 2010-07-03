@@ -1,4 +1,4 @@
-
+import re
 from eizzek.lib.registry import registry
 
 class plugin(object):
@@ -7,7 +7,7 @@ class plugin(object):
     '''
     
     def __init__(self, regex, name=None):
-        self.regex = regex
+        self.regex = re.compile(regex)
         self.name = name
     
     def __call__(self, func):
