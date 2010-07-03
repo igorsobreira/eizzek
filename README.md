@@ -3,6 +3,9 @@ Eizzek Bot
 
 Eizzek is a simple g-talk bot built on top of [Twisted](http://twistedmatrix.com/) and [Wokkel](http://wokkel.ik.nu/).
 
+To start just execute the command:
+
+    twistd -ny twistd.tac
 
 Dependencies
 ------------
