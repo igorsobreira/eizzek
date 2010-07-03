@@ -6,3 +6,7 @@ start_daemon:
 
 test:
 	nosetests tests/ --with-coverage
+
+clean:
+	find . -name "*.pyc" -delete
+	rm -rf .coverage
