@@ -17,20 +17,23 @@ class EizzekProtocol(MessageProtocol):
         if msg["type"] == 'chat' and hasattr(msg, "body"):
             
             # TODO: use deferreds
-            response = self.answer(str(msg.body))
-            
-            reply = domish.Element((None, "message"))
-            
-            reply["to"] = msg["from"]
-            reply["from"] = self.parent.jid.full()
-            reply["type"] = 'chat'
-            reply.addElement("body", content=response)
-            
-            self.send(reply)
+            response = self.answer( msg )
     
     def answer(self, message):
+        
+        response = self.match( str(message.body) )      
+          
+        reply = domish.Element((None, "message"))
+        reply["to"] = message["from"]
+        reply["from"] = self.parent.jid.full()
+        reply["type"] = 'chat'
+        reply.addElement("body", content=response)
+        
+        self.send(reply)
+    
+    def match(self, body):
         for name, (regex, func) in registry.plugins.items():
-            match = regex.match(message)
+            match = regex.match(body)
             if not match:
                 continue
             
