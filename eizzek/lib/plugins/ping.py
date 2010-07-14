@@ -8,3 +8,5 @@ def ping(url):
     popen = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     out, _ = popen.communicate()
     return out
+
+
