@@ -3,12 +3,31 @@ from lxml import html as lhtml
 from eizzek.lib.decorators import plugin
 
 
-# @plugin(r'^stackoverflow(?P<tag>.+)?$')
-# def stackoverflow(tag=None):
+@plugin(r'^stackoverflow(?P<tag>.+)?$')
+def stackoverflow(tag=None):
+    '''
+    Stack Overflow plugin, get questions from http://stackoverflow.com/
+    
+    Usage:
+    
+        stackoverflow
+            # returns the latest 50 questions
+        
+        stackoverflow python
+            # returns the latest 50 questions of tag "python"
+    '''
+    return ''
+
+
+def get_page(url):
+    raise NotImplementedError
 
 
 def parse(page):
-    
+    '''
+    Given an html page as string returns a list of dicts, where each dict has
+    information about one question
+    '''
     html = lhtml.fromstring(page)
     elements = html.cssselect('div.question-summary')
     
