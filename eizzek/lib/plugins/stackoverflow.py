@@ -1,15 +1,13 @@
 from lxml import html as lhtml
 from urllib import urlopen
 
-#from twisted.web.client import getPage
-
 from eizzek.lib.decorators import plugin
 
 
 URL = 'http://stackoverflow.com/'
 TAG_URL = 'http://stackoverflow.com/questions/tagged/%s'
 
-@plugin(r'^stackoverflow(?P<tag>.+)?$')
+@plugin(r'^stackoverflow ?(?P<tag>.+)?$')
 def stackoverflow(tag=None):
     '''
     Stack Overflow plugin, get questions from http://stackoverflow.com/
@@ -17,10 +15,10 @@ def stackoverflow(tag=None):
     Usage:
     
         stackoverflow
-            # returns the latest 50 questions
+            # returns the latest questions
         
         stackoverflow python
-            # returns the latest 50 questions of tag "python"
+            # returns the latest questions of tag "python"
     '''
     if tag:
         url = TAG_URL % tag
@@ -52,6 +50,7 @@ def build_response(questions, tag=None):
         response += '\n\n'
     
     return response.rstrip('\n\n')
+
 
 class QuestionsParser(object):
     

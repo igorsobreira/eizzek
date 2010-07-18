@@ -25,13 +25,14 @@ class EizzekProtocol(MessageProtocol):
         reply = self.build_response( to=message['from'], body=body )
         self.send(reply)
     
+    # FIXME: this logic should go to PluginRegistry
     def match(self, body):
         for name, (regex, func) in registry.plugins.items():
             match = regex.match(body)
             if not match:
                 continue
             
-            # FIXME: for now, it's not possible to mix args and kwargs
+            # TODO: for now, it's not possible to mix args and kwargs
             kwargs = match.groupdict()
             if kwargs:
                 return func(**kwargs)

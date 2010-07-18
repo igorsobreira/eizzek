@@ -2,18 +2,59 @@ import os.path
 import unittest
 
 from eizzek.lib.plugins.stackoverflow import build_response, QuestionsParser, TaggedQuestionsParser
+from eizzek.lib.registry import registry
+from eizzek.bot import EizzekProtocol
 
-here = os.path.realpath(os.path.dirname(__file__))
-python_tag_page = os.path.join(here, 'stackoverflow_python_tag.html')
-index_page = os.path.join(here, 'stackoverflow_top_questions.html')
+class RegexTestCase(unittest.TestCase):
+    
+    def setUp(self):
+        # unregister the original plugin
+        self.stackoverflow_regex, self.stackoverflow_function = registry.plugins['stackoverflow']
+        registry.unregister('stackoverflow')
+        
+        # register a mock, just to verify if the regex is working
+        self.called = False
+        self.tag = None
+        
+        def stackoverflow_mock(tag=None):
+            self.called = True
+            self.tag = tag
+        
+        registry.register('stackoverflow', self.stackoverflow_regex, stackoverflow_mock)
+        
+        self.protocol = EizzekProtocol()
+    
+    def tearDown(self):
+        # undo de mock
+        registry.unregister('stackoverflow')
+        registry.register('stackoverflow', self.stackoverflow_regex, self.stackoverflow_function)
+    
+    def test_simple(self):
+        self.protocol.match('stackoverflow')
+        
+        assert self.called
+        assert self.tag is None
+    
+    def test_tagged(self):
+        self.protocol.match('stackoverflow python')
+        
+        assert self.called
+        assert 'python' == self.tag
+    
 
+
+    
 class ParseTestCase(unittest.TestCase):
 
+    here = os.path.realpath(os.path.dirname(__file__))
+    python_tag_page = os.path.join(here, 'stackoverflow_python_tag.html')
+    index_page = os.path.join(here, 'stackoverflow_top_questions.html')
+
     def setUp(self):
-        with open(index_page) as file_obj:
+        with open(self.index_page) as file_obj:
             self.index_data = QuestionsParser().parse( file_obj.read() )
         
-        with open(python_tag_page) as file_obj:
+        with open(self.python_tag_page) as file_obj:
             self.tagged_data = TaggedQuestionsParser().parse( file_obj.read() )
     
     def test_read_all_elements(self):
