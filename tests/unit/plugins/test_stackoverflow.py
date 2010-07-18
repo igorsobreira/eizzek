@@ -18,8 +18,8 @@ class ParseTestCase(unittest.TestCase):
     def test_question_attributes(self):
         question = self.data[0]
         
-        assert question['summary'] == u'Python Rpy R data processing optimization'
-        assert question['link'] == u'http://stackoverflow.com/questions/3242670/python-rpy-r-data-processing-optimization'
+        assert u'Python Rpy R data processing optimization' == question['summary']
+        assert u'http://stackoverflow.com/questions/3242670/python-rpy-r-data-processing-optimization' == question['link'] 
         assert [u'python', u'r', u'rpy2'] == question['tags']
         assert '0' == question['votes']
         assert '0' == question['answers']
