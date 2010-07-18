@@ -5,6 +5,10 @@ from eizzek.lib.registry import registry
 
 class EizzekProtocol(MessageProtocol):
     
+    @property
+    def _my_jid(self):
+        return self.parent.jid.full()
+    
     def connectionMade(self):
         print 'Connected'
         self.send(AvailablePresence())
@@ -13,22 +17,12 @@ class EizzekProtocol(MessageProtocol):
         print 'Disconnected'
     
     def onMessage(self, msg):
-        
-        if msg["type"] == 'chat' and hasattr(msg, "body"):
-            
-            # TODO: use deferreds
-            response = self.answer( msg )
+        if msg["type"] == 'chat' and hasattr(msg, "body"):            
+            self.answer(msg)
     
     def answer(self, message):
-        
-        response = self.match( str(message.body) )      
-          
-        reply = domish.Element((None, "message"))
-        reply["to"] = message["from"]
-        reply["from"] = self.parent.jid.full()
-        reply["type"] = 'chat'
-        reply.addElement("body", content=response)
-        
+        body = self.match( str(message.body) )
+        reply = self.build_response( to=message['from'], body=body )
         self.send(reply)
     
     def match(self, body):
@@ -41,11 +35,20 @@ class EizzekProtocol(MessageProtocol):
             kwargs = match.groupdict()
             if kwargs:
                 return func(**kwargs)
+            
             args = match.groups()
             if args:
                 return func(*args)
+            
             return func()
         
         return u"I can't understand..."
     
+    def build_response(self, to, body):
+        reply = domish.Element((None, "message"))
+        reply["to"] = to
+        reply["from"] = self._my_jid
+        reply["type"] = 'chat'
+        reply.addElement("body", content=body)
+        return reply
 

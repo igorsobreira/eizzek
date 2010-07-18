@@ -9,7 +9,7 @@ test_unit:
 	@nosetests tests/unit/
 
 test_functional:
-	@nosetests tests/functional
+	@nosetests tests/functional/
 
 clean:
 	@find . -name "*.pyc" -delete

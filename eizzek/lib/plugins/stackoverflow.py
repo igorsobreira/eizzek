@@ -1,7 +1,13 @@
 from lxml import html as lhtml
+from urllib import urlopen
+
+#from twisted.web.client import getPage
 
 from eizzek.lib.decorators import plugin
 
+
+URL = 'http://stackoverflow.com/'
+TAG_URL = 'http://stackoverflow.com/questions/tagged/%s'
 
 @plugin(r'^stackoverflow(?P<tag>.+)?$')
 def stackoverflow(tag=None):
@@ -16,37 +22,82 @@ def stackoverflow(tag=None):
         stackoverflow python
             # returns the latest 50 questions of tag "python"
     '''
-    return ''
-
-
-def get_page(url):
-    raise NotImplementedError
-
-
-def parse(page):
-    '''
-    Given an html page as string returns a list of dicts, where each dict has
-    information about one question
-    '''
-    html = lhtml.fromstring(page)
-    elements = html.cssselect('div.question-summary')
+    if tag:
+        url = TAG_URL % tag
+        parser = TaggedQuestionsParser()
+    else:
+        url = URL
+        parser = QuestionsParser()
     
-    questions = []
-    for element in elements:
+    page = urlopen(url).read()
+    questions = parser.parse(page)
+    
+    return build_response(questions, tag)
+
+
+def build_response(questions, tag=None):
+    response = u'Stack Overflow: '
+    if tag:
+        response += u'%s tag\n\n' % tag
+    else:
+        response += u'Top Questions\n\n'
+    
+    for question in questions:
+        if tag and tag not in question['tags']:
+            continue
+        response += question['summary'] + '\n'
+        response += question['link'] + '\n'
+        response += u'Tags: %s.   ' % ', '.join(question['tags'])
+        response += u'(votes: %(votes)s, answers: %(answers)s, views: %(views)s)' % question
+        response += '\n\n'
+    
+    return response.rstrip('\n\n')
+
+class QuestionsParser(object):
+    
+    def parse(self, page):
+        questions = []
+        for element in self.get_elements(page):
+            questions.append({
+                'summary': self.get_summary(element),
+                'link': self.get_link(element),
+                'tags': self.get_tags(element),
+                'votes': self.get_votes(element),
+                'answers': self.get_answers(element),
+                'views': self.get_views(element)
+            })
+        return questions
+    
+    def get_elements(self, page):
+        html = lhtml.fromstring(page)
+        return html.cssselect('div.question-summary')
+    
+    def get_summary(self, element):
+        return element.cssselect('div.summary h3 a')[0].text_content()
+    
+    def get_link(self, element):
+        return u'http://stackoverflow.com%s' % element.cssselect('div.summary h3 a')[0].attrib['href']
+    
+    def get_tags(self, element):
         tags = element.cssselect('div.tags')[0].attrib['class'].split()
         tags.remove('tags')
-        tags = [ unicode(tag.lstrip('t-')) for tag in tags ]
-        
-        summary = element.cssselect('div.summary h3 a')[0]
-        
-        questions.append({
-            'summary': summary.text_content(),
-            'link': u'http://stackoverflow.com%s' % summary.attrib['href'],
-            'tags': tags,
-            'votes': element.cssselect('span.vote-count-post strong')[0].text_content(),
-            'answers': element.cssselect('div.status strong')[0].text_content(),
-            'views': element.cssselect('div.views')[0].text_content().split()[0]
-        })
+        return [ unicode(tag.lstrip('t-')) for tag in tags ]
     
-    return questions
+    def get_views(self, element):
+        return element.cssselect('div.views')[0].text_content().split()[0]
     
+    def get_votes(self, element):
+        return element.cssselect('div.votes div.mini-counts')[0].text_content()
+    
+    def get_answers(self, element):
+        return element.cssselect('div.status div.mini-counts')[0].text_content()    
+    
+class TaggedQuestionsParser(QuestionsParser):
+    
+    def get_votes(self, element):
+        return element.cssselect('span.vote-count-post strong')[0].text_content()
+    
+    def get_answers(self, element):
+        return element.cssselect('div.status strong')[0].text_content()
+    
+
