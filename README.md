@@ -18,6 +18,7 @@ Dependencies
  - Wokkel
  - PyOpenSSL
  - Nose
+ - lxml
 
 
 config.py
