@@ -15,10 +15,12 @@ class RegexTestCase(unittest.TestCase):
         # register a mock, just to verify if the regex is working
         self.called = False
         self.tag = None
+        self.limit = 50
         
-        def stackoverflow_mock(tag=None):
+        def stackoverflow_mock(limit=None, tag=None):
             self.called = True
             self.tag = tag
+            self.limit = int(limit) if limit else 50
         
         registry.register('stackoverflow', self.stackoverflow_regex, stackoverflow_mock)
         
@@ -34,16 +36,42 @@ class RegexTestCase(unittest.TestCase):
         
         assert self.called
         assert self.tag is None
+        assert 50 == self.limit
     
     def test_tagged(self):
         self.protocol.match('stackoverflow python')
         
         assert self.called
         assert 'python' == self.tag
+        assert 50 == self.limit
+        
+    def test_limit(self):
+        self.protocol.match('stackoverflow 10')
+        
+        assert self.called
+        assert self.tag is None
+        assert 10 == self.limit
+    
+    def test_tagged_limit(self):
+        self.protocol.match('stackoverflow 15 python')
+        
+        assert self.called
+        assert 'python' == self.tag
+        assert 15 == self.limit
+    
+    def test_different_tags(self):
+        tags = ('c++', 'c#', 'regular-language', 'asp.net', '.net', 'actionscript-3')
+        
+        for tag in tags:
+            self.protocol.match('stackoverflow ' + tag)
+            
+            assert self.called
+            assert tag == self.tag
+            
+            self.called, self.tag = False, None
     
 
 
-    
 class ParseTestCase(unittest.TestCase):
 
     here = os.path.realpath(os.path.dirname(__file__))
@@ -60,6 +88,13 @@ class ParseTestCase(unittest.TestCase):
     def test_read_all_elements(self):
         assert 50 == len(self.tagged_data)
         assert 96 == len(self.index_data)
+    
+    def test_read_limited_elements(self):
+        parser = QuestionsParser()
+        with open(self.index_page) as file_obj:
+            data = parser.parse( file_obj.read(), limit=10 )
+        
+        assert 10 == len(data)
     
     def test_tagged_question_attributes(self):
         question = self.tagged_data[0]

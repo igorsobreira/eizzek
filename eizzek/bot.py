@@ -17,7 +17,7 @@ class EizzekProtocol(MessageProtocol):
         print 'Disconnected'
     
     def onMessage(self, msg):
-        if msg["type"] == 'chat' and hasattr(msg, "body"):            
+        if msg["type"] == 'chat' and hasattr(msg, "body") and msg.body:
             self.answer(msg)
     
     def answer(self, message):
