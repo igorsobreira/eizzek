@@ -1,3 +1,5 @@
 config.py
 *.pyc
 .coverage
+_trial_temp
+twistd.pid

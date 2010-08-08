@@ -21,9 +21,8 @@ class EizzekProtocol(MessageProtocol):
             self.answer(msg)
     
     def answer(self, message):
-        body = self.match( str(message.body) )
-        reply = self.build_response( to=message['from'], body=body )
-        self.send(reply)
+        defer = self.match( str(message.body) )
+        defer.addCallback(self.send_response, to=message['from'])
     
     # FIXME: this logic should go to PluginRegistry
     def match(self, body):
@@ -44,6 +43,10 @@ class EizzekProtocol(MessageProtocol):
             return func()
         
         return u"I can't understand..."
+    
+    def send_response(self, body, to):
+        reply = self.build_response(to, body)
+        self.send(reply)
     
     def build_response(self, to, body):
         reply = domish.Element((None, "message"))

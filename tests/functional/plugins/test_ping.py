@@ -1,7 +1,15 @@
+import time
+
+from twisted.trial import unittest
 from eizzek.lib.plugins.ping import ping
 
-
-def test_ping():
-    response = ping('igorsobreira.com')
+class PingTest(unittest.TestCase):
     
-    assert 'PING igorsobreira.com (67.18.187.198): 56 data bytes' in response
+    def test_ping(self):
+        def assert_ping(response):
+            assert 'PING igorsobreira.com (67.18.187.198): 56 data bytes' in response
+        
+        deferred = ping('igorsobreira.com')        
+        deferred.addCallback(assert_ping)
+        return deferred
+    
