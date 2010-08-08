@@ -1,6 +1,8 @@
 from lxml import html as lhtml
 from urllib import urlopen
 
+from twisted.internet import defer, reactor
+
 from eizzek.lib.decorators import plugin
 
 
@@ -23,12 +25,19 @@ def stackoverflow(limit=None, tag=None):
         stackoverflow python
             # returns the latest questions of tag "python"
         
-        stackoverflow python 15
+        stackoverflow 15 python
             # returns the latest 15 questions of tag "python"
         
     If no limit parameter is passed, default is 50
     
     '''
+    deferred = defer.Deferred()
+    reactor.callWhenRunning(answer, deferred=deferred, limit=limit, tag=tag)
+    return deferred
+
+
+def answer(deferred, limit, tag):
+    
     limit = int(limit) if limit else 50
     if tag:
         url = TAG_URL % tag
@@ -39,8 +48,9 @@ def stackoverflow(limit=None, tag=None):
     
     page = urlopen(url).read()
     questions = parser.parse(page, limit)
+    response = build_response(questions, tag)
     
-    return build_response(questions, tag)
+    deferred.callback(response)
 
 
 def build_response(questions, tag=None):

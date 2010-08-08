@@ -1,30 +1,48 @@
 from eizzek.lib.plugins.stackoverflow import stackoverflow, build_response
 
-def test_index():
-    response = stackoverflow()
-    questions = response.split('\n\n')
-        
-    assert 'Stack Overflow: Top Questions' in response
-    assert 51 == len(questions)     # 50 + header
+from twisted.trial import unittest
 
-
-def test_index_limited():
-    response = stackoverflow(limit=10)
-    questions = response.split('\n\n')
+class StackoverflowTest(unittest.TestCase):
     
-    assert 'Stack Overflow: Top Questions' in response
-    assert 11 == len(questions)
-
-
-def test_tagged():
-    response = stackoverflow(tag='python')
-    questions = response.split('\n\n')
+    def test_index(self):
+        def assert_questions(response):
+            questions = response.split('\n\n')
         
-    assert 'Stack Overflow: python tag' in response
-
-def test_tagged_limited():
-    response = stackoverflow(tag='python', limit=3)
-    questions = response.split('\n\n')
+            assert 'Stack Overflow: Top Questions' in response
+            assert 51 == len(questions)     # 50 + header
         
-    assert 'Stack Overflow: python tag' in response
-    assert 4 == len(questions)    
+        deferred = stackoverflow()
+        deferred.addCallback(assert_questions)
+        return deferred
+
+    def test_index_limited(self):
+        def assert_questions(response):
+            questions = response.split('\n\n')
+    
+            assert 'Stack Overflow: Top Questions' in response
+            assert 11 == len(questions)
+            
+        deferred = stackoverflow(limit=10)
+        deferred.addCallback(assert_questions)
+        return deferred
+    
+    def test_tagged(self):
+        def assert_questions(response):
+            questions = response.split('\n\n')
+        
+            assert 'Stack Overflow: python tag' in response
+        
+        deferred = stackoverflow(tag='python')
+        deferred.addCallback(assert_questions)
+        return deferred
+    
+    def test_tagged_limited(self):
+        def assert_questions(response):
+            questions = response.split('\n\n')
+        
+            assert 'Stack Overflow: python tag' in response
+            assert 4 == len(questions)
+        
+        deferred = stackoverflow(tag='python', limit=3)
+        deferred.addCallback(assert_questions)
+        return deferred

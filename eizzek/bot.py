@@ -5,6 +5,8 @@ from eizzek.lib.registry import registry
 
 class EizzekProtocol(MessageProtocol):
     
+    CANT_UNDERSTANT = u"Sorry, I can't understand..."
+    
     @property
     def _my_jid(self):
         return self.parent.jid.full()
@@ -22,7 +24,10 @@ class EizzekProtocol(MessageProtocol):
     
     def answer(self, message):
         defer = self.match( str(message.body) )
-        defer.addCallback(self.send_response, to=message['from'])
+        if defer:
+            defer.addCallback(self.send_response, to=message['from'])
+        else:
+            self.send_response(self.CANT_UNDERSTANT, to=message['from'])
     
     # FIXME: this logic should go to PluginRegistry
     def match(self, body):
@@ -41,8 +46,6 @@ class EizzekProtocol(MessageProtocol):
                 return func(*args)
             
             return func()
-        
-        return u"I can't understand..."
     
     def send_response(self, body, to):
         reply = self.build_response(to, body)
