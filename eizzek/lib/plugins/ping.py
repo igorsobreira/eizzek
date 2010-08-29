@@ -1,5 +1,3 @@
-import subprocess
-
 from twisted.internet import defer, protocol, reactor
 
 from eizzek.lib.decorators import plugin
