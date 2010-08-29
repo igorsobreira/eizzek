@@ -1,4 +1,4 @@
-from eizzek.lib.plugins.stackoverflow import stackoverflow, build_response
+from eizzek.plugins.stackoverflow import stackoverflow, build_response
 
 from twisted.trial import unittest
 

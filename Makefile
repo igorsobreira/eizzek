@@ -4,6 +4,8 @@ start:
 
 functional:
 	trial tests/functional
+unit:
+	nosetests --nocapture tests/unit/
 
 clean:
 	find . -name "*.pyc" -delete

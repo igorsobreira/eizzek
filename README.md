@@ -39,7 +39,7 @@ A plugin is a way to make the bot do something. There are (will be) two types of
 Simple Plugins
 --------------
 
-A simple plugin is just a regex and a function that returns a string. There is an example in lib/plugins/ping.py.
+A simple plugin is just a regex and a function that returns a string. There is an example in plugins/ping.py.
 
 When a message arrives, if any simple plugin regex matches the function will be called. This is already working :)
 

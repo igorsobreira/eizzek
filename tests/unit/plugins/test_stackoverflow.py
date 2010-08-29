@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from eizzek.lib.plugins.stackoverflow import build_response, QuestionsParser, TaggedQuestionsParser
+from eizzek.plugins.stackoverflow import build_response, QuestionsParser, TaggedQuestionsParser
 from eizzek.lib.registry import registry
 from eizzek.bot import EizzekProtocol
 

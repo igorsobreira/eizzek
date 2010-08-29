@@ -1,7 +1,7 @@
 import time
 
 from twisted.trial import unittest
-from eizzek.lib.plugins.ping import ping
+from eizzek.plugins.ping import ping
 
 class PingTest(unittest.TestCase):
     
