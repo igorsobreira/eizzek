@@ -2,15 +2,14 @@
 start:
 	twistd -ny eizzek/twistd.tac
 
-test:
-	@nosetests --with-coverage --nocapture --cover-package=eizzek tests/
+unit:
+	nosetests --nocapture tests/unit/
 
-test_unit:
-	@nosetests --nocapture tests/unit/
-
-test_functional:
-	@nosetests --nocapture tests/functional/
+functional:
+	trial tests/functional
 
 clean:
-	@find . -name "*.pyc" -delete
-	@rm -rf .coverage
+	find . -name "*.pyc" -delete
+	rm -rf .coverage
+	rm -rf _trial_temp
+	rm twistd.log

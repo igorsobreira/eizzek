@@ -3,3 +3,4 @@ config.py
 .coverage
 _trial_temp
 twistd.pid
+*.swp
