@@ -4,7 +4,7 @@ from wokkel.client import XMPPClient
 
 from eizzek.bot import EizzekProtocol
 from eizzek import config
-from eizzek.lib import plugins  # register all plugins
+from eizzek import plugins  # register all plugins
 
 application = service.Application("eizzek")
 
