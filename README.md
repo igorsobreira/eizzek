@@ -17,7 +17,7 @@ Dependencies
  - Twisted
  - Wokkel
  - PyOpenSSL
- - Nose
+ - py.test
  - lxml
 
 
