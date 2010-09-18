@@ -5,6 +5,11 @@ from eizzek.lib.decorators import plugin
 
 @plugin(r'^ping (?P<url>.+)$')
 def ping(url):
+    '''
+    Ping plugin. Usage:
+
+        ping <url>
+    '''
     deferred = defer.Deferred()
     reactor.spawnProcess(PingProtocol(deferred), '/sbin/ping', ['/sbin/ping', '-c', '3', url])
     return deferred
