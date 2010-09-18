@@ -2,8 +2,7 @@ import os.path
 import unittest
 
 from eizzek.plugins.stackoverflow import build_response, QuestionsParser, TaggedQuestionsParser
-from eizzek.lib.registry import registry
-from eizzek.bot import EizzekProtocol
+from eizzek import registry, PluginResolver
 
 class RegexTestCase(unittest.TestCase):
     
@@ -24,36 +23,36 @@ class RegexTestCase(unittest.TestCase):
         
         registry.register('stackoverflow', self.stackoverflow_regex, stackoverflow_mock)
         
-        self.protocol = EizzekProtocol()
-    
+        self.resolver = PluginResolver()
+
     def tearDown(self):
         # undo de mock
         registry.unregister('stackoverflow')
         registry.register('stackoverflow', self.stackoverflow_regex, self.stackoverflow_function)
     
     def test_simple(self):
-        self.protocol.match('stackoverflow')
+        self.resolver.resolve('stackoverflow')
         
         assert self.called
         assert self.tag is None
         assert 50 == self.limit
     
     def test_tagged(self):
-        self.protocol.match('stackoverflow python')
+        self.resolver.resolve('stackoverflow python')
         
         assert self.called
         assert 'python' == self.tag
         assert 50 == self.limit
         
     def test_limit(self):
-        self.protocol.match('stackoverflow 10')
+        self.resolver.resolve('stackoverflow 10')
         
         assert self.called
         assert self.tag is None
         assert 10 == self.limit
     
     def test_tagged_limit(self):
-        self.protocol.match('stackoverflow 15 python')
+        self.resolver.resolve('stackoverflow 15 python')
         
         assert self.called
         assert 'python' == self.tag
@@ -63,7 +62,7 @@ class RegexTestCase(unittest.TestCase):
         tags = ('c++', 'c#', 'regular-language', 'asp.net', '.net', 'actionscript-3')
         
         for tag in tags:
-            self.protocol.match('stackoverflow ' + tag)
+            self.resolver.resolve('stackoverflow ' + tag)
             
             assert self.called
             assert tag == self.tag
