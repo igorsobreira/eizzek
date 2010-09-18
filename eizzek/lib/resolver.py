@@ -1,13 +1,18 @@
 from eizzek.lib.registry import registry
 
 class PluginResolver(object):
-
+    '''
+    This has a way to find and call plugins.
+    '''
+    
     def resolve(self, string):
-        for name, (regex, func) in registry.plugins.items():
-            match = regex.match(string)
-            if match: break
-        else:
-            raise LookupError(u"Plugin not found")
+        '''
+        Returns the result of a plugin call. ``string`` is the 
+        message body received by the bot.
+
+        Raises ``LookupError`` if the plugin is not found.
+        '''
+        func = self.find_callable(string)
 
         kwargs = self._clear_kwargs(match.groupdict())
         if kwargs:
@@ -19,6 +24,20 @@ class PluginResolver(object):
         
         return func()
     
+    def find(self, string):
+        '''
+        Returns the plugin callable, but don't call it.
+        ``string`` is the message body received by the bot.
+
+        Raises ``LookupError`` if the plugin is not found.
+        '''
+        for name, (regex, func) in registry.plugins.items():
+            match = regex.match(string)
+            if match: break
+        else:
+            raise LookupError(u"Plugin not found")
+        return func
+
     def _clear_kwargs(self, kwargs):
         ''' Don't pass parameters where the value is None '''
         for k,v in kwargs.items():

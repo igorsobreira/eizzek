@@ -50,4 +50,8 @@ class PluginRouterTest(unittest.TestCase):
 
         assert "you're 0"
     
+    def test_find_callable_function(self):
+        func = self.resolver.find('age 22')
+
+        assert 'age' == func.__name__
 
