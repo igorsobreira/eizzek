@@ -2,6 +2,7 @@ from twisted.words.xish import domish
 from wokkel.xmppim import MessageProtocol, AvailablePresence
 
 from eizzek.lib.registry import registry
+from eizzek.lib.resolver import PluginResolver
 
 class EizzekProtocol(MessageProtocol):
     
@@ -23,30 +24,13 @@ class EizzekProtocol(MessageProtocol):
             self.answer(msg)
     
     def answer(self, message):
-        defer = self.match( str(message.body) )
-        if defer:
+        resolver = PluginResolver()
+        try:
+            defer = resolver.resolve(unicode(message.body))
             defer.addCallback(self.send_response, to=message['from'])
-        else:
+        except LookupError:
             self.send_response(self.CANT_UNDERSTANT, to=message['from'])
-    
-    # FIXME: this logic should go to PluginRegistry
-    def match(self, body):
-        for name, (regex, func) in registry.plugins.items():
-            match = regex.match(body)
-            if not match:
-                continue
-            
-            # TODO: for now, it's not possible to mix args and kwargs
-            kwargs = match.groupdict()
-            if kwargs:
-                return func(**kwargs)
-            
-            args = match.groups()
-            if args:
-                return func(*args)
-            
-            return func()
-    
+      
     def send_response(self, body, to):
         reply = self.build_response(to, body)
         self.send(reply)
