@@ -1,8 +1,6 @@
 import unittest
 
-from eizzek.lib.registry import registry
-from eizzek.lib.decorators import plugin
-from eizzek.lib.router import PluginResolver
+from eizzek import PluginResolver, plugin, registry
 
 class PluginRouterTest(unittest.TestCase):
 
@@ -13,7 +11,7 @@ class PluginRouterTest(unittest.TestCase):
         def age(num):
             return "you're %d" % int(num)
         
-        @plugin(r"age ?(\d+)?")
+        @plugin(r"aged ?(\d+)?")
         def age_default(num=0):
             return "you're %s" % num
         
@@ -46,12 +44,13 @@ class PluginRouterTest(unittest.TestCase):
         assert u"hello stranger" == result
 
     def test_call_plugin_with_args_and_default_argument(self):
-        result = self.resolver.resolve('age')
+        result = self.resolver.resolve('aged')
 
         assert "you're 0"
     
     def test_find_callable_function(self):
-        func = self.resolver.find('age 22')
-
+        func, _ = self.resolver.find('age 22')
+        
+        print func.__name__
         assert 'age' == func.__name__
 

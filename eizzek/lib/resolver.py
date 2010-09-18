@@ -12,7 +12,7 @@ class PluginResolver(object):
 
         Raises ``LookupError`` if the plugin is not found.
         '''
-        func = self.find_callable(string)
+        func, match = self.find(string)
 
         kwargs = self._clear_kwargs(match.groupdict())
         if kwargs:
@@ -26,7 +26,7 @@ class PluginResolver(object):
     
     def find(self, string):
         '''
-        Returns the plugin callable, but don't call it.
+        Returns a tuple: the plugin callable and the match result object. 
         ``string`` is the message body received by the bot.
 
         Raises ``LookupError`` if the plugin is not found.
@@ -36,7 +36,7 @@ class PluginResolver(object):
             if match: break
         else:
             raise LookupError(u"Plugin not found")
-        return func
+        return func, match
 
     def _clear_kwargs(self, kwargs):
         ''' Don't pass parameters where the value is None '''
