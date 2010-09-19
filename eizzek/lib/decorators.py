@@ -1,5 +1,5 @@
 import re
-from eizzek.lib.registry import registry
+from eizzek.lib.registry import registry, session_registry
 
 class plugin(object):
     '''
@@ -16,6 +16,9 @@ class plugin(object):
         return func
     
 
-
-
-
+def session_plugin(klass):
+    '''
+    Decorator used to create a session plugin
+    '''
+    session_registry.register(klass)
+    return klass

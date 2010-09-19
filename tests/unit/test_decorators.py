@@ -1,8 +1,8 @@
 from unittest import TestCase
 import re
 
-from eizzek.lib.decorators import plugin
-from eizzek.lib.registry import registry
+from eizzek.lib.decorators import plugin, session_plugin
+from eizzek.lib.registry import registry, session_registry
 
 class PluginTest(TestCase):
     
@@ -43,3 +43,19 @@ class PluginTest(TestCase):
         assert type(registry.plugins['ping'][0]) == type(re.compile(r'.*'))
     
 
+class SessionPluginTest(TestCase):
+
+    def setUp(self):
+        session_registry.clear()
+
+    def test_create_session_plugin(self):
+
+        assert 0 == len(session_registry.plugins)
+
+        @session_plugin
+        class Translate(object):
+            name = 'translate'
+            regex = r'^translate (?P<something>\w+)$'
+
+        assert 1 == len(session_registry.plugins)
+        assert session_registry.plugins.has_key('translate')
