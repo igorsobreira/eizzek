@@ -1,6 +1,6 @@
 from twisted.internet import defer, reactor
 
-from eizzek.lib.decorators import plugin
+from eizzek import plugin, session_registry
 
 @plugin(r'^begin (?P<plugin_name>\w+)$')
 def begin(plugin_name):
@@ -26,6 +26,9 @@ def end():
 
 
 def do_begin(deferred, plugin_name):
-    response = u"'%s' plugin not found" % plugin_name
-    deferred.callback(response)
+    try:
+        _, plugin = session_registry.plugins[plugin_name]
+        deferred.callback(plugin().begin())
+    except KeyError:
+        deferred.callback(u"Plugin not found")
 

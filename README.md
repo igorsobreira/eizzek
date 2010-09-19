@@ -19,7 +19,8 @@ Dependencies
  - PyOpenSSL
  - py.test
  - lxml
-
+ - txredis
+ - redis
 
 config.py
 ---------
