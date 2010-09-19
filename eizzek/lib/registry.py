@@ -1,3 +1,4 @@
+import inspect
 from abc import ABCMeta, abstractmethod
 
 class BaseRegistry(object):
@@ -28,6 +29,7 @@ class PluginRegistry(BaseRegistry):
     '''    
     
     def register(self, name, regex, callable_obj):
+        self._validate_callable(callable_obj)
         if name in self.plugins:
             return
         self._plugins[name] = (regex, callable_obj)
@@ -35,6 +37,12 @@ class PluginRegistry(BaseRegistry):
     def unregister(self, name_or_callable):
         name = getattr(name_or_callable, '__name__', name_or_callable)
         self._plugins.pop(name, None)
+    
+    def _validate_callable(self, callable_obj):
+        # FIXME: probably only works for functions
+        if not inspect.getargspec(callable_obj).keywords:
+            raise TypeError(u"The plugin %s must receive **kwargs", callable_obj.__name__)
+
 
 class SessionPluginRegistry(BaseRegistry):
     '''
