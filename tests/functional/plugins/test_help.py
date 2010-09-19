@@ -22,11 +22,11 @@ class HelpTest(unittest.TestCase):
     def setUp(self):
         
         @plugin(r'^simple (\d+)$')
-        def simple_plugin():
+        def simple_plugin(**kwargs):
             '''nothing special'''
         
         @plugin(r'^no_help_here$')
-        def no_help_plugin():
+        def no_help_plugin(**kwargs):
             pass
 
     def tearDown(self):

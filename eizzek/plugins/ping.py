@@ -4,7 +4,7 @@ from eizzek.lib.decorators import plugin
 
 
 @plugin(r'^ping (?P<url>.+)$')
-def ping(url):
+def ping(url, **kwargs):
     '''
     Ping plugin. Usage:
 

@@ -15,7 +15,7 @@ class PluginTest(TestCase):
         assert len(registry.plugins) == 0
         
         @plugin(r'^ping (.+)$')
-        def ping():
+        def ping(**kwargs):
             return ''
         
         assert len(registry.plugins) == 1
@@ -27,7 +27,7 @@ class PluginTest(TestCase):
         assert len(registry.plugins) == 0
         
         @plugin(r'^ping (.+)$', name='ping_plugin')
-        def ping():
+        def ping(**kwargs):
             return ''
         
         assert len(registry.plugins) == 1
@@ -37,7 +37,7 @@ class PluginTest(TestCase):
     def test_compile_regex_on_register(self):
         
         @plugin(r'^ping (.+)$')
-        def ping():
+        def ping(**kwargs):
             return ''
         
         assert type(registry.plugins['ping'][0]) == type(re.compile(r'.*'))

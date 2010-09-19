@@ -16,7 +16,7 @@ class RegexTestCase(unittest.TestCase):
         self.tag = None
         self.limit = 50
         
-        def stackoverflow_mock(limit=None, tag=None):
+        def stackoverflow_mock(limit=None, tag=None, **kw):
             self.called = True
             self.tag = tag
             self.limit = int(limit) if limit else 50

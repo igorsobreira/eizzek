@@ -10,7 +10,7 @@ URL = 'http://stackoverflow.com/'
 TAG_URL = 'http://stackoverflow.com/questions/tagged/%s'
 
 @plugin(r'^stackoverflow ?(?P<limit>\d+)? ?(?P<tag>[a-zA-Z0-9\+\#\-\.]+)?$')
-def stackoverflow(limit=None, tag=None):
+def stackoverflow(limit=None, tag=None, **kwargs):
     '''
     Stack Overflow plugin, get questions from http://stackoverflow.com/
     

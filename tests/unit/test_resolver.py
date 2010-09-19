@@ -2,21 +2,21 @@ import unittest
 
 from eizzek import PluginResolver, plugin, registry
 
-class PluginRouterTest(unittest.TestCase):
+class PluginResolverTest(unittest.TestCase):
 
     def setUp(self):
         registry.clear()
         
         @plugin(r"age (\d+)")
-        def age(num):
+        def age(num, **kwargs):
             return "you're %d" % int(num)
         
         @plugin(r"aged ?(\d+)?")
-        def age_default(num=0):
+        def age_default(num=0, **kwargs):
             return "you're %s" % num
         
         @plugin(r"hello ?(?P<name>\w+)?")
-        def hello(name='stranger'):
+        def hello(name='stranger', **kwargs):
             return "hello %s" % name
 
         self.resolver = PluginResolver()

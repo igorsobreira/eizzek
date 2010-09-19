@@ -3,7 +3,7 @@ from twisted.internet import defer, protocol, reactor
 from eizzek import plugin, registry
 
 @plugin(r'^help ?(?P<plugin>.*)$')
-def help(plugin=None):
+def help(plugin=None, **kwargs):
     '''
     Eizzek help. Usage:
 
