@@ -11,7 +11,7 @@ class StackoverflowTest(unittest.TestCase):
             assert 'Stack Overflow: Top Questions' in response
             assert 51 == len(questions)     # 50 + header
         
-        deferred = stackoverflow()
+        deferred = stackoverflow({})
         deferred.addCallback(assert_questions)
         return deferred
 
@@ -22,7 +22,7 @@ class StackoverflowTest(unittest.TestCase):
             assert 'Stack Overflow: Top Questions' in response
             assert 11 == len(questions)
             
-        deferred = stackoverflow(limit=10)
+        deferred = stackoverflow(connection={}, limit=10)
         deferred.addCallback(assert_questions)
         return deferred
     
@@ -32,7 +32,7 @@ class StackoverflowTest(unittest.TestCase):
         
             assert 'Stack Overflow: python tag' in response
         
-        deferred = stackoverflow(tag='python')
+        deferred = stackoverflow(connection={}, tag='python')
         deferred.addCallback(assert_questions)
         return deferred
     
@@ -43,6 +43,6 @@ class StackoverflowTest(unittest.TestCase):
             assert 'Stack Overflow: python tag' in response
             assert 4 == len(questions)
         
-        deferred = stackoverflow(tag='python', limit=3)
+        deferred = stackoverflow(connection={}, tag='python', limit=3)
         deferred.addCallback(assert_questions)
         return deferred

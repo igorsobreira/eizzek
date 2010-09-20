@@ -31,16 +31,6 @@ class PluginRegistryTest(TestCase):
         assert len(self.registry.plugins) == 1
         assert self.registry.plugins['ping'] == (self.regex, self.ping)
     
-    def test_register_verifies_the_plugin_receives_kwargs(self):
-
-        def wrong(): return ''
-        
-        try:
-            self.registry.register('wrong', self.regex, wrong)
-            assert 0, u"Should raise ValueError"
-        except TypeError:
-            pass
-    
     def test_unregister_plugin_by_name(self):
         
         assert len(self.registry.plugins) == 0

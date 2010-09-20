@@ -25,7 +25,7 @@ class BeginTest(unittest.TestCase):
         def assert_begin(response):
             assert u"Plugin not found" == response
 
-        deferred = begin('foo')
+        deferred = begin({}, 'foo')
         deferred.addCallback(assert_begin)
         return deferred
     
@@ -33,7 +33,7 @@ class BeginTest(unittest.TestCase):
         def assert_begin(response):
             assert u"Welcome to reverse!" == response
 
-        deferred = begin('reverse')
+        deferred = begin({}, 'reverse')
         deferred.addCallback(assert_begin)
         return deferred
 

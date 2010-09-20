@@ -11,10 +11,10 @@ class HelpRegexTest(unittest.TestCase):
         self.resolver = PluginResolver()
     
     def test_help_no_arguments(self):
-        assert self.resolver.resolve('help')
+        assert self.resolver.resolve('help', {})
     
     def test_help_with_argument(self):
-        assert self.resolver.resolve('help plugin_name')
+        assert self.resolver.resolve('help plugin_name', {})
 
 
 class HelpTest(unittest.TestCase):
@@ -22,11 +22,11 @@ class HelpTest(unittest.TestCase):
     def setUp(self):
         
         @plugin(r'^simple (\d+)$')
-        def simple_plugin(**kwargs):
+        def simple_plugin(conn, num):
             '''nothing special'''
         
         @plugin(r'^no_help_here$')
-        def no_help_plugin(**kwargs):
+        def no_help_plugin(conn):
             pass
 
     def tearDown(self):
@@ -37,7 +37,7 @@ class HelpTest(unittest.TestCase):
         def assert_error(response):
             assert u"Plugin not found" == response
 
-        deferred = help(plugin='foo')
+        deferred = help({}, 'foo')
         deferred.addCallback(assert_error)
         return deferred
     
@@ -45,7 +45,7 @@ class HelpTest(unittest.TestCase):
         def assert_help(response):
             assert u"nothing special" == response
 
-        deferred = help(plugin='simple_plugin')
+        deferred = help({}, 'simple_plugin')
         deferred.addCallback(assert_help)
         return deferred
    
@@ -53,7 +53,7 @@ class HelpTest(unittest.TestCase):
         def assert_self_help(response):
             assert "Eizzek help" in response
 
-        deferred = help()
+        deferred = help({})
         deferred.addCallback(assert_self_help)
         return deferred
     
@@ -61,7 +61,7 @@ class HelpTest(unittest.TestCase):
         def assert_no_help(response):
             assert u"No help found" == response
 
-        deferred = help('no_help_plugin')
+        deferred = help({}, 'no_help_plugin')
         deferred.addCallback(assert_no_help)
         return deferred
     
@@ -70,6 +70,6 @@ class HelpTest(unittest.TestCase):
             assert u"no_help_plugin" in response
             assert u"simple_plugin" in response
 
-        deferred = help('-l')
+        deferred = help({}, '-l')
         deferred.addCallback(assert_list)
         return deferred

@@ -3,7 +3,7 @@ from twisted.internet import defer, reactor
 from eizzek import plugin, session_registry
 
 @plugin(r'^begin (?P<plugin_name>\w+)$')
-def begin(plugin_name, **kwargs):
+def begin(connection, plugin_name):
     '''
     This plugin is used to start a Session with 
     any Session Plugin available.
@@ -15,7 +15,7 @@ def begin(plugin_name, **kwargs):
 
 
 @plugin(r'^end$')
-def end(**kwargs):
+def end(connection):
     '''
     This plugin is used to finish a Session with 
     the current Session Plugin in use.

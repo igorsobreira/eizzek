@@ -16,7 +16,7 @@ class RegexTestCase(unittest.TestCase):
         self.tag = None
         self.limit = 50
         
-        def stackoverflow_mock(limit=None, tag=None, **kw):
+        def stackoverflow_mock(conn, limit=None, tag=None, **kw):
             self.called = True
             self.tag = tag
             self.limit = int(limit) if limit else 50
@@ -31,28 +31,28 @@ class RegexTestCase(unittest.TestCase):
         registry.register('stackoverflow', self.stackoverflow_regex, self.stackoverflow_function)
     
     def test_simple(self):
-        self.resolver.resolve('stackoverflow')
+        self.resolver.resolve('stackoverflow', {})
         
         assert self.called
         assert self.tag is None
         assert 50 == self.limit
     
     def test_tagged(self):
-        self.resolver.resolve('stackoverflow python')
+        self.resolver.resolve('stackoverflow python', {})
         
         assert self.called
         assert 'python' == self.tag
         assert 50 == self.limit
         
     def test_limit(self):
-        self.resolver.resolve('stackoverflow 10')
+        self.resolver.resolve('stackoverflow 10', {})
         
         assert self.called
         assert self.tag is None
         assert 10 == self.limit
     
     def test_tagged_limit(self):
-        self.resolver.resolve('stackoverflow 15 python')
+        self.resolver.resolve('stackoverflow 15 python', {})
         
         assert self.called
         assert 'python' == self.tag
@@ -62,7 +62,7 @@ class RegexTestCase(unittest.TestCase):
         tags = ('c++', 'c#', 'regular-language', 'asp.net', '.net', 'actionscript-3')
         
         for tag in tags:
-            self.resolver.resolve('stackoverflow ' + tag)
+            self.resolver.resolve('stackoverflow ' + tag, {})
             
             assert self.called
             assert tag == self.tag

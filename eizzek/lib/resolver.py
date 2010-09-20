@@ -5,7 +5,7 @@ class PluginResolver(object):
     This has a way to find and call plugins.
     '''
     
-    def resolve(self, string):
+    def resolve(self, string, connection_data):
         '''
         Returns the result of a plugin call. ``string`` is the 
         message body received by the bot.
@@ -16,13 +16,13 @@ class PluginResolver(object):
 
         kwargs = self._clear_kwargs(match.groupdict())
         if kwargs:
-            return func(**kwargs)
+            return func(connection_data, **kwargs)
         
         args = self._clear_args(match.groups())
         if args:
-            return func(*args)
+            return func(connection_data, *args)
         
-        return func()
+        return func(connection_data)
     
     def find(self, string):
         '''

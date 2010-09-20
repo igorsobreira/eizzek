@@ -25,8 +25,11 @@ class EizzekProtocol(MessageProtocol):
     
     def answer(self, message):
         resolver = PluginResolver()
+        conn_data = {
+            'message': message,
+        }
         try:
-            defer = resolver.resolve(unicode(message.body))
+            defer = resolver.resolve(unicode(message.body), conn_data)
             defer.addCallback(self.send_response, to=message['from'])
         except LookupError:
             self.send_response(self.CANT_UNDERSTANT, to=message['from'])
