@@ -1,0 +1,5 @@
+
+JID = 'username@gmail.com/fun'
+PASSWORD = 'secret'
+SERVER = 'talk.google.com'
+PORT = 5222

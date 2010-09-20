@@ -7,9 +7,10 @@ To start just execute the command:
 
     make start
 
-To run all tests use:
+To run tests use:
 
-    make test
+    make unit
+    make functional
 
 Dependencies
 ------------
@@ -19,7 +20,6 @@ Dependencies
  - PyOpenSSL
  - py.test
  - lxml
- - txredis
  - redis
 
 config.py
@@ -35,23 +35,23 @@ You need to create a config.py file with some variables:
 Plugins
 =======
 
-A plugin is a way to make the bot do something. There are (will be) two types of plugins: simple and session plugins.
+A plugin is a way to make the bot do something.
 
 Simple Plugins
 --------------
 
-A simple plugin is just a regex and a function that returns a string. There is an example in plugins/ping.py.
+A simple plugin is just a regex associated with a callabe that returs a ``defer.Deferred`` object. There are examples in eizzek/plugins. The first parameter is a dict with connection data (currenty just the message object).
 
-When a message arrives, if any simple plugin regex matches the function will be called. This is already working :)
+When a message arrives all the first regex that matches is called. 
 
-SessionPlugin (IDEA)
+Session Plugin
 --------------------
 
 A session plugin works a bit different, the client starts a session using the plugin name:
 
-    client: use math
+    client: math
     eizzek: Wellcome to Math plugin
-    
+
 from now on, all the messages typed are handled by the plugin: 
 
     client: 3 + 4
@@ -64,17 +64,18 @@ from now on, all the messages typed are handled by the plugin:
 The API is shown below:
     
     @session_plugin
-    class MathSessionPlugin(object):
-        welcome = "Welcome to Math 
-        help = "Use +, -, /, *"
-        bye = "The Math plugin says goodbye"
+    class TranslateSessionPlugin(object):
+        name = "translate"
+        regex = "^translate (?P<from_language>\w+) (?P<to_language>\w+)$"
         
-        def answer(self, message):
-            # return a string with your answer
+        def begin(self, connection, from_language, to_language):
+            # called when the user types the plugin name
+            # returns defer.Deferred()
 
-note the use of decorators in classes, it's new in Python 2.6. If you're stuck with an older python version, you can register like this:
-
-    from eizzek.registry import registry
-
-    registry.session_plugin('math', MathSessionPlugin)
-
+        def handle(self, connection, from_language, to_language):
+            # called for every new message, after begin() was called
+            # returns defer.Deferred()
+        
+        def end(self, connection):
+            # called when the user types "end"
+            # returns defer.Deferred()
