@@ -42,7 +42,7 @@ Simple Plugins
 
 A simple plugin is just a regex associated with a callabe that returs a ``defer.Deferred`` object. There are examples in eizzek/plugins. The first parameter is a dict with connection data (currenty just the message object).
 
-When a message arrives all the first regex that matches is called. 
+When a message arrives first regex that matches is called. 
 
 Session Plugin
 --------------------
@@ -52,7 +52,7 @@ A session plugin works a bit different, the client starts a session using the pl
     client: math
     eizzek: Wellcome to Math plugin
 
-from now on, all the messages typed are handled by the plugin: 
+from now on, all the messages are handled by the plugin: 
 
     client: 3 + 4
     eizzek: 7
