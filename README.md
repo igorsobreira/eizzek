@@ -72,7 +72,7 @@ The API is shown below:
             # called when the user types the plugin name
             # returns defer.Deferred()
 
-        def handle(self, connection, from_language, to_language):
+        def handle(self, connection, message):
             # called for every new message, after begin() was called
             # returns defer.Deferred()
         
