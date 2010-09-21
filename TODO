@@ -1,0 +1,4 @@
+ - make bot.py call session.handle_session_plugin if a 
+   session is already open (testing with mocks)
+
+ - create the first session plugin
