@@ -46,7 +46,7 @@ class SessionPluginRegistry(BaseRegistry):
     def register(self, klass):
         if klass.name in self.plugins:
             return
-        self._plugins[klass.name] = (klass.regex, klass)
+        self._plugins[klass.name] = (re.compile(klass.regex), klass)
 
     def unregister(self, name_or_klass):
         name = getattr(name_or_klass, 'name', name_or_klass)

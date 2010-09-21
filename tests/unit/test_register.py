@@ -85,7 +85,8 @@ class SessionPluginRegistryTest(TestCase):
         self.session_registry.register(self.translate)
 
         assert 1 == len(self.session_registry.plugins)
-        assert (self.translate.regex, self.translate) == self.session_registry.plugins[self.translate.name]
+        assert (re.compile(self.translate.regex), self.translate) == \
+                self.session_registry.plugins[self.translate.name]
         
         class OtherTranslatePlugin(object):
             name = 'translate'
@@ -96,7 +97,8 @@ class SessionPluginRegistryTest(TestCase):
         
         assert 1 == len(self.session_registry.plugins)
 
-        assert (self.translate.regex, self.translate) == self.session_registry.plugins[self.translate.name]
+        assert (re.compile(self.translate.regex), self.translate) == \
+                self.session_registry.plugins[self.translate.name]
 
 
     def test_unregister_plugin_by_name(self):
