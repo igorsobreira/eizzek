@@ -1,4 +1,3 @@
-import inspect
 from abc import ABCMeta, abstractmethod
 
 class BaseRegistry(object):

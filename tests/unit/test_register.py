@@ -116,7 +116,7 @@ class SessionPluginRegistryTest(TestCase):
         
         assert 1 == len(self.session_registry.plugins)
         
-        self.session_registry.unregister(self.translate)     # by callable, using __name__ attribute
+        self.session_registry.unregister(self.translate)     # by callable, using ``name`` attribute
         
         assert 0 == len(self.session_registry.plugins)
 
