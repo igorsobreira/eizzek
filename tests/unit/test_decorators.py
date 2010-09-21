@@ -34,15 +34,6 @@ class PluginTest(TestCase):
         assert registry.plugins.has_key('ping_plugin')
     
     
-    def test_compile_regex_on_register(self):
-        
-        @plugin(r'^ping (.+)$')
-        def ping(**kwargs):
-            return ''
-        
-        assert type(registry.plugins['ping'][0]) == type(re.compile(r'.*'))
-    
-
 class SessionPluginTest(TestCase):
 
     def setUp(self):

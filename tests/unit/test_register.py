@@ -11,7 +11,8 @@ class PluginRegistryTest(TestCase):
         def ping(**kwargs):
             return ''
         self.ping = ping
-        self.regex = re.compile(r'^ping (.+)$')
+        self.regex = r'^ping (.+)$'
+        self.compiled_regex = re.compile(self.regex)
     
 
     def test_register_plugin(self):
@@ -21,7 +22,7 @@ class PluginRegistryTest(TestCase):
         self.registry.register(self.ping.__name__, self.regex, self.ping)
         
         assert len(self.registry.plugins) == 1
-        assert self.registry.plugins['ping'] == (self.regex, self.ping)
+        assert self.registry.plugins['ping'] == (self.compiled_regex, self.ping)
         
         def other_ping(**kw):
             return ''
@@ -30,7 +31,7 @@ class PluginRegistryTest(TestCase):
         self.registry.register('ping', self.regex, other_ping)
         
         assert len(self.registry.plugins) == 1
-        assert self.registry.plugins['ping'] == (self.regex, self.ping)
+        assert self.registry.plugins['ping'] == (self.compiled_regex, self.ping)
     
     def test_unregister_plugin_by_name(self):
         
