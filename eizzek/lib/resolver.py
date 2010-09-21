@@ -42,17 +42,8 @@ class PluginResolver(object):
     
     def _resolve_simple_plugin(self, message, connection_data):
         func, match = self.find(message, registry)
+        return self._call_function(func, connection_data, match)
 
-        kwargs = self._clear_kwargs(match.groupdict())
-        if kwargs:
-            return func(connection_data, **kwargs)
-        
-        args = self._clear_args(match.groups())
-        if args:
-            return func(connection_data, *args)
-        
-        return func(connection_data)
-    
     def _resolve_session_plugin(self, message, connection_data):
         klass, match = self.find(message, session_registry)
         plugin = klass()
@@ -62,17 +53,8 @@ class PluginResolver(object):
             session.end(jid)
 
         session.begin(jid, plugin.name)
+        return self._call_function(plugin.begin, connection_data, match)
 
-        kwargs = self._clear_kwargs(match.groupdict())
-        if kwargs:
-            return plugin.begin(connection_data, **kwargs)
-        
-        args = self._clear_args(match.groups())
-        if args:
-            return plugin.begin(connection_data, *args)
-
-        return plugin.begin(connection_data)
-     
     def find(self, message, registry):
         '''
         Searches for a plugin in ``registry`` trying to match on each 
@@ -88,6 +70,17 @@ class PluginResolver(object):
         else:
             raise LookupError(u"Plugin not found")
         return callable_obj, match
+
+    def _call_function(self, function, connection_data, match):
+        kwargs = self._clear_kwargs(match.groupdict())
+        if kwargs:
+            return function(connection_data, **kwargs)
+        
+        args = self._clear_args(match.groups())
+        if args:
+            return function(connection_data, *args)
+
+        return function(connection_data)
 
     def _clear_kwargs(self, kwargs):
         ''' Don't pass parameters where the value is None '''
