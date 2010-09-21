@@ -1,3 +1,4 @@
+import re
 from unittest import TestCase
 
 from eizzek.lib.registry import PluginRegistry, SessionPluginRegistry
@@ -10,7 +11,7 @@ class PluginRegistryTest(TestCase):
         def ping(**kwargs):
             return ''
         self.ping = ping
-        self.regex = r'^ping (.+)$'
+        self.regex = re.compile(r'^ping (.+)$')
     
 
     def test_register_plugin(self):

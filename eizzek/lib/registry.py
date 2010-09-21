@@ -1,3 +1,4 @@
+import re
 from abc import ABCMeta, abstractmethod
 
 class BaseRegistry(object):
@@ -30,7 +31,7 @@ class PluginRegistry(BaseRegistry):
     def register(self, name, regex, callable_obj):
         if name in self.plugins:
             return
-        self._plugins[name] = (regex, callable_obj)
+        self._plugins[name] = (re.compile(regex), callable_obj)
 
     def unregister(self, name_or_callable):
         name = getattr(name_or_callable, '__name__', name_or_callable)

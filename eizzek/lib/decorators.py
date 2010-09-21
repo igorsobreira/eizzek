@@ -1,4 +1,3 @@
-import re
 from eizzek.lib.registry import registry, session_registry
 
 class plugin(object):
@@ -7,7 +6,7 @@ class plugin(object):
     '''
     
     def __init__(self, regex, name=None):
-        self.regex = re.compile(regex)
+        self.regex = regex
         self.name = name
     
     def __call__(self, func):
