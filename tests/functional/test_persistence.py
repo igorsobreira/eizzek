@@ -44,4 +44,9 @@ class PersistenceTest(TestCase):
         self._redis.hset(self.jid, 'plugin', 'translate')
 
         assert self.session.is_open(self.jid)
+    
+    def test_current_plugin_method(self):
+        self.session.begin(self.jid, 'translate')
+
+        assert u"translate" == self.session.get_current(self.jid)['plugin']
 
