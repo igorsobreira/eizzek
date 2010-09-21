@@ -8,7 +8,7 @@ class SessionPersistence(object):
         self.port = 6379
 
     def begin(self, jid, plugin_name):
-        if self.redis.hget(jid, 'plugin'):
+        if self.is_open(jid):
             raise IOError(u"This JID already has an open session")
         self.redis.hset(jid, 'plugin', plugin_name)
 
